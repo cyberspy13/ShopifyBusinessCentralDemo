@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +27,6 @@ namespace ShopifyBusinessCentralDemo.LoginCredentials
 
         public ShopifyCustomerData(IPage page)
         {
-
             _page = page;
 
             _firstName = _page.Locator("[name='firstName']");
@@ -40,61 +41,47 @@ namespace ShopifyBusinessCentralDemo.LoginCredentials
             _postcode = _page.Locator("[name='customer[zip]']");
             
         }
-        public async Task inputCustomerFirstNameData(string firstName)
+        public async Task InputCustomerData(string firstName,string lastName,string emailAddress,
+                                            string addressName, string addressState, string apartmentNo,
+                                            string city, string postcode,string country)
         {
             await _firstName.FillAsync(firstName);
-
-        }
-        public async Task inputCustomerSecondNameData(string lastName)
-        {
             await _lastName.FillAsync(lastName);
-
-        }
-        public async Task inputCustomerEmailData(string emailAddress)
-        {
             await _emailAddress.FillAsync(emailAddress);
-
+            await _address.FillAsync($"{addressName},{addressState}");
+            await _apartment.FillAsync(apartmentNo);
+            await _city.FillAsync(city);
+            await _postcode.FillAsync(postcode);
+            await _countrySelection.SelectOptionAsync(country);
+           
+            /*
+            bool isOptionalAvailable = await _page.Locator($"option[value='{country}']").IsVisibleAsync();
+            if (isOptionalAvailable)
+            {
+                await _page.Locator("[name='customer[country]']").SelectOptionAsync(country);
+            }
+            else
+            {
+                await _page.Locator("[name='customer[country]']").SelectOptionAsync("United Kingdom");
+            }
+            */
         }
         public async Task inputPhoneNumber(int phoneNumber)
         {
             await _phoneNumber.FillAsync("+4477" + phoneNumber.ToString());
-
         }
-        public async Task inputNewCountry()
-        {
-            //await _countrySelection.ClickAsync();
-            await _page.Locator("[name='customer[country]']").SelectOptionAsync("Ukraine");
-        }
+       
         public async Task inputCompany(string company)
         {
             await _company.FillAsync(company);
-        }
-        public async Task inputAddress(string address)
-        {
-            await _address.FillAsync(address);
-
-        }
-        public async Task inputApartment(string apartment)
-        {
-            await _address.FillAsync(apartment);
-
-        }
-        public async Task inputCityTitle(string city)
-        {
-            await _city.FillAsync(city);
-        }
-        public async Task inputPostalCode(string postalCode)
-        {
-            await _postcode.FillAsync(postalCode);
         }
         public async Task saveButtonMethod()
         {
             await _page.GetByRole(AriaRole.Button, new() { Name = "Save" }).ClickAsync();
             
         }
-        public async Task<string> RandomFirstNameCreation()
+        public async Task<string> FetchRandomdataCreation()
         {
-
             using (HttpClient client = new HttpClient())
             {
                 var response = await client.GetAsync("https://randomuser.me/api/");
@@ -103,50 +90,21 @@ namespace ShopifyBusinessCentralDemo.LoginCredentials
                     var content = await response.Content.ReadAsStringAsync();
                     dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
                     string firstName = obj.results[0].name.first;
-                    //string lastName = obj.results[0].name.last;
-
-
-                    return $"{firstName}";
-
-                }
-            }
-            return null;
-
-            //this is old version of the code based on array
-            /* 
-            Random rand = new Random();
-            string[] names = { "John", "Jane", "Robert", "Emma", "Michael", "Emily", "Joseph" };
-            string randomFirstName = names[rand.Next(names.Length)];
-            return randomFirstName;
-            */
-        }
-        public async Task<string> RandomSecondNameCreation()
-        {
-
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://randomuser.me/api/");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-                    //string firstName = obj.results[0].name.first;
                     string lastName = obj.results[0].name.last;
+                    string emailAddress = obj.results[0].email;
+                    string randomAddressName = obj.results[0].location.street.name;
+                    string randomAddressState = obj.results[0].location.state;
+                    string apartmentNumber = obj.results[0].location.street.number;
+                    string city = obj.results[0].location.city;
+                    string postcode = obj.results[0].location.postcode;
+                    string country = obj.results[0].location.country;
 
-
-                    return $"{lastName+"-Automation-Test-by-ML"}";
+                    return $"{firstName},{lastName},{emailAddress},{randomAddressName}," +
+                        $"{randomAddressState},{apartmentNumber},{city},{postcode},{country}";
 
                 }
             }
             return null;
-
-            //this is old version of the code based on array
-            /*
-            Random rand = new Random();
-            string[] names = { "Smith", "Brookland", "Kiosaki", "Philips", "Howe", "Thatcher", "Stalin" };
-            string randomSecondName = names[rand.Next(names.Length)];
-            return randomSecondName;
-            */
         }
         public async Task<int> RandomPhoneNumber()
         {
@@ -156,99 +114,12 @@ namespace ShopifyBusinessCentralDemo.LoginCredentials
         public async Task<string> RandomCompanyCreation()
         {
             Random rand = new Random();
-            string[] names = { "CISCO", "HILTON", "DHL", "Softcat", "Baringa", "Bristol Myers Squib", "Sopra Steria" };
+            string[] names = { "CISCO", "HILTON", "DHL", "Softcat", "Baringa", "Bristol Myers Squib", "Sopra Steria","Advania UK", "Azzure LTD" };
             string randomCompanyName = names[rand.Next(names.Length)];
             return randomCompanyName;
         }
-        public async Task<string> RandomAddressCreation()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://randomuser.me/api/");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-                    string street = obj.results[0].location.street.name;
-                    //string city = obj.results[0].location.city;
-                    string state = obj.results[0].location.state;
-
-                    return $"{street}, {state}";
-
-                }
-            }
-            return null;
-        }
-        public async Task<string> RandomApartmentCreation()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://randomuser.me/api/");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-                    string apartmentNumber = obj.results[0].location.street.number;
-
-                    return $"{apartmentNumber}";
-
-                }
-            }
-            return null;
-        }
-        public async Task<string> RandomCityCreation()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://randomuser.me/api/");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-                    string city = obj.results[0].location.city;
-
-                    return $"{city}";
-                }
-            }
-            return null;
-        }
-        public async Task<string> RandomPostalCodeCreation()
-        {
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync("https://randomuser.me/api/");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject(content);
-                    string postcode = obj.results[0].location.postcode;
-
-                    return $"{postcode}";
-                }
-            }
-            return null;
-        }
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        
+      
     }
     
 }
