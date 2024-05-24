@@ -792,6 +792,427 @@ namespace ShopifyBusinessCentralDemo
         }
 
 
+        [Test]
+        public async Task Test8()
+        {
+            using var playwright = await Playwright.CreateAsync();
+            // Browser
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>
+                                                                                                                                                                                                                      //Page
+            var page = await browser.NewPageAsync();
+
+            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.Locator("[id='account_email']").ClickAsync();
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+            await Task.Delay(2000);
+
+            // await page.Locator("[id='h-captcha']").ClickAsync();
+            //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+
+            await page.GetByLabel("Password", new() { Exact = true }).ClickAsync();
+            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@zzC3910!");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
+
+            await Task.Delay(TimeSpan.FromSeconds(2)); // wait for 2 seconds
+            await page.Locator("[id='account_tfa_code']").FillAsync("864593");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            await page.GetByRole(AriaRole.Link, new() { Name = "Back to Stores List" }).ClickAsync();
+
+            await page.GetByRole(AriaRole.Link, new() { Name = "Customers" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add customer" }).ClickAsync();
+
+            ShopifyCustomerData shopifyNewCustomer = new ShopifyCustomerData(page);
+            var firstRandomName = await shopifyNewCustomer.FetchRandomdataCreation();
+            var customerCreationParts = firstRandomName.Split(',');
+            await shopifyNewCustomer.InputCustomerData(customerCreationParts[0], customerCreationParts[1],
+                                                       customerCreationParts[2], customerCreationParts[3],
+                                                       customerCreationParts[4], customerCreationParts[5],
+                                                       customerCreationParts[6], customerCreationParts[7],
+                                                       customerCreationParts[8]);
+
+            var PhoneNo = await shopifyNewCustomer.RandomPhoneNumber();
+            await shopifyNewCustomer.inputPhoneNumber(PhoneNo);
+
+            var customerCompany = await shopifyNewCustomer.RandomCompanyCreation();
+            await shopifyNewCustomer.inputCompany(customerCompany);
+
+            await Task.Delay(3000);
+
+            await shopifyNewCustomer.saveButtonMethod();
+
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+            await page.GetByPlaceholder("Search products").ClickAsync();
+            await page.GetByPlaceholder("Search products").FillAsync("50153191");
+            await page.GetByText("ZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELI").ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
+            await Task.Delay(3000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Edit discount" }).ClickAsync();
+            await page.GetByPlaceholder("0.00").ClickAsync();
+            await page.GetByPlaceholder("0.00").FillAsync("100");
+            string discountValue = await page.GetByPlaceholder("0.00").InputValueAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Apply" }).ClickAsync();
+            
+            float realDiscountValue = 0;
+            if (string.IsNullOrWhiteSpace(discountValue))
+            {
+                Console.WriteLine("Handle empty value case");            }
+            else
+            {
+                
+                realDiscountValue = float.Parse(discountValue);
+                
+                // continue with your code
+            }
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Collect payment" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Menuitem, new() { Name = "Mark as paid" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+            await Task.Delay(3000);
+            await page.GetByRole(AriaRole.Link, new() { Name = "Products" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Search and filter products" }).ClickAsync();
+            await page.GetByPlaceholder("Searching all products").ClickAsync();
+            await page.GetByPlaceholder("Searching all products").FillAsync("50153191");
+            await page.GetByRole(AriaRole.Link, new() { Name = "ZAN FELIX TABLE+ 6 ELISE CHAIRS GREY" }).ClickAsync();
+            await page.GetByLabel("Price").ClickAsync();
+            string itemPriceValue = await page.GetByLabel("Price").InputValueAsync();
+            float itemPrice = float.Parse(itemPriceValue);
+
+            float itemPriceAfterAppliedDiscount = itemPrice - realDiscountValue;
+            Console.WriteLine("Item price after discount is: " + itemPriceAfterAppliedDiscount);
+
+            var context = await browser.NewContextAsync();
+            // Create a new page in this context
+            var newPage = await context.NewPageAsync();
+            // Now use 'newPage' for your tests like you used 'page'
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+
+            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myPassword = "qu!ckHat70";
+
+            await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Next" }).ClickAsync();
+            await newPage.GetByPlaceholder("Password").ClickAsync();
+            await newPage.Locator("[name='passwd']").FillAsync(myPassword);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Sign in" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Yes" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Search" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).FillAsync("Sales Orders");
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Gridcell, new() { Name = "\" / \" Sales Orders Lists Not bookmarked" }).GetByText("Sales Orders").ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Columnheader, new() { Name = "No., sorted in Ascending order Ascending Open menu for No." }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByText("Descending").ClickAsync();
+            await Task.Delay(2000);
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Manage" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Edit" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "General, Show more" }).ClickAsync();
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).ClickAsync();
+            string lineAmountPrice = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).InputValueAsync();
+            float lineAmountIntValue = float.Parse(lineAmountPrice);
+            Console.WriteLine("Item Price in Business Central: " + lineAmountIntValue);
+
+            // validation
+
+            if (itemPriceAfterAppliedDiscount != lineAmountIntValue)
+            {
+                Console.WriteLine("Test failed.The discount value does not go throught to Business Central");
+            }
+            else
+            {
+                Console.WriteLine("Test passed.The discount value does flow throught to Business Central");
+            }
+        }
+
+        [Test]
+        public async Task Test9()
+        {
+            using var playwright = await Playwright.CreateAsync();
+            // Browser
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>                                                                                                                        //Page
+            var page = await browser.NewPageAsync();
+            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.Locator("[id='account_email']").ClickAsync();
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+            await Task.Delay(2000);
+            // await page.Locator("[id='h-captcha']").ClickAsync();
+            //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+            await page.GetByLabel("Password", new() { Exact = true }).ClickAsync();
+            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@zzC3910!");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
+            await Task.Delay(TimeSpan.FromSeconds(2)); // wait for 2 seconds
+
+            await page.Locator("[id='account_tfa_code']").FillAsync("317138");
+
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            await page.GetByRole(AriaRole.Link, new() { Name = "Back to Stores List" }).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "Customers" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add customer" }).ClickAsync();
+
+            ShopifyCustomerData shopifyNewCustomer = new ShopifyCustomerData(page);
+            var firstRandomName = await shopifyNewCustomer.FetchRandomdataCreation();
+            var customerCreationParts = firstRandomName.Split(',');
+            await shopifyNewCustomer.InputCustomerData(customerCreationParts[0], customerCreationParts[1],
+                                                       customerCreationParts[2], customerCreationParts[3],
+                                                       customerCreationParts[4], customerCreationParts[5],
+                                                       customerCreationParts[6], customerCreationParts[7],
+                                                       customerCreationParts[8]);
+
+            var PhoneNo = await shopifyNewCustomer.RandomPhoneNumber();
+            await shopifyNewCustomer.inputPhoneNumber(PhoneNo);
+
+            var customerCompany = await shopifyNewCustomer.RandomCompanyCreation();
+            await shopifyNewCustomer.inputCompany(customerCompany);
+            await Task.Delay(3000);
+            await shopifyNewCustomer.saveButtonMethod();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+            await page.GetByPlaceholder("Search products").ClickAsync();
+            await page.GetByPlaceholder("Search products").FillAsync("50153191");
+            await page.GetByText("ZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELI").ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
+            await Task.Delay(3000);
+            //await page.Locator(".Polaris-TextField__Segment").First.ClickAsync();
+            //await page.Locator(".Polaris-TextField__Segment").First.ClickAsync();
+            //await page.Locator(".Polaris-TextField__Segment").First.ClickAsync();
+            //await page.Locator(".Polaris-TextField__Segment").First.ClickAsync();
+            //await page.Locator(".Polaris-TextField__Segment").First.ClickAsync();
+            await page.GetByLabel("available quantity").FillAsync("6");
+            await page.GetByLabel("available quantity").ClickAsync();
+            string qtyOnShopify = await page.GetByLabel("available quantity").InputValueAsync();
+            Console.WriteLine("Quantity on the Shopify side: " + qtyOnShopify);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add shipping or delivery" }).ClickAsync();
+            await page.Locator("label:has-text(\"Custom\") span").Nth(2).ClickAsync();
+            await page.GetByPlaceholder("E.g. Free shipping").ClickAsync();
+            await page.GetByPlaceholder("E.g. Free shipping").FillAsync("Shipping charge");
+            await page.GetByPlaceholder("0.00").ClickAsync();
+            await page.GetByPlaceholder("0.00").FillAsync("200");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Apply" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Collect payment" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Menuitem, new() { Name = "Mark as paid" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+            await Task.Delay(2000);
+
+            var context = await browser.NewContextAsync();
+            // Create a new page in this context
+            var newPage = await context.NewPageAsync();
+            // Now use 'newPage' for your tests like you used 'page'
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+
+            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myPassword = "qu!ckHat70";
+
+            await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Next" }).ClickAsync();
+            await newPage.GetByPlaceholder("Password").ClickAsync();
+            await newPage.Locator("[name='passwd']").FillAsync(myPassword);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Sign in" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Yes" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Search" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).FillAsync("Sales Orders");
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Gridcell, new() { Name = "\" / \" Sales Orders Lists Not bookmarked" }).GetByText("Sales Orders").ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Columnheader, new() { Name = "No., sorted in Ascending order Ascending Open menu for No." }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByText("Descending").ClickAsync();
+            await Task.Delay(2000);
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Manage" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Edit" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "General, Show more" }).ClickAsync();
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Qty. to Assemble to Order", Exact = true }).ClickAsync();
+            string qtyOnBusinessCentral = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Qty. to Assemble to Order", Exact = true }).InputValueAsync();
+
+            Console.WriteLine("Item quantity on Business Central: " + qtyOnBusinessCentral);
+
+            // validation
+
+            if (qtyOnShopify != qtyOnBusinessCentral)
+            {
+                Console.WriteLine("value not found");
+            }
+            else
+            {
+                Console.WriteLine("Values are matched. Great job");
+            }
+        }
+        [Test]
+        public async Task Test10()
+        {
+            using var playwright = await Playwright.CreateAsync();
+            // Browser
+            await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>
+            //Page
+            var page = await browser.NewPageAsync();
+            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.Locator("[id='account_email']").ClickAsync();
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+            //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
+            await Task.Delay(1000);
+            //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+            await Task.Delay(1000);
+
+            //await page.Locator("[id='h-captcha']").ClickAsync();
+            //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
+
+            await page.GetByLabel("Password", new() { Exact = true }).ClickAsync();
+            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@zzC3910!");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
+            await Task.Delay(TimeSpan.FromSeconds(2)); // wait for 2 seconds
+
+            await page.Locator("[id='account_tfa_code']").FillAsync("142507");
+
+            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            await Task.Delay(TimeSpan.FromSeconds(2));
+            await page.GetByRole(AriaRole.Link, new() { Name = "Back to Stores List" }).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "Customers" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add customer" }).ClickAsync();
+
+            ShopifyCustomerData shopifyNewCustomer = new ShopifyCustomerData(page);
+            var firstRandomName = await shopifyNewCustomer.FetchRandomdataCreation();
+            var customerCreationParts = firstRandomName.Split(',');
+            await shopifyNewCustomer.InputCustomerData(customerCreationParts[0], customerCreationParts[1],
+                                                       customerCreationParts[2], customerCreationParts[3],
+                                                       customerCreationParts[4], customerCreationParts[5],
+                                                       customerCreationParts[6], customerCreationParts[7],
+                                                       customerCreationParts[8]);
+
+            var PhoneNo = await shopifyNewCustomer.RandomPhoneNumber();
+            await shopifyNewCustomer.inputPhoneNumber(PhoneNo);
+
+            var customerCompany = await shopifyNewCustomer.RandomCompanyCreation();
+            await shopifyNewCustomer.inputCompany(customerCompany);
+
+            await Task.Delay(3000);
+            await shopifyNewCustomer.saveButtonMethod();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+
+            await page.GetByPlaceholder("Search products").ClickAsync();
+            await page.GetByPlaceholder("Search products").FillAsync("50153191");
+            await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").ClickAsync();
+            string firstShopifyItem = await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").InputValueAsync();
+            await page.GetByText("ZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELI").ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
+           
+            await page.GetByPlaceholder("Search products").ClickAsync();
+            await page.GetByPlaceholder("Search products").FillAsync("50080308");
+            await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").ClickAsync();
+            string secondShopifyItem = await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").InputValueAsync();
+            await page.GetByText("ADDIS AIRER GATE FOLD 6MADDIS AIRER GATE FOLD 6MADDIS AIRER GATE FOLD 6M").ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
+           
+            await page.GetByPlaceholder("Search products").ClickAsync();
+            await page.GetByPlaceholder("Search products").FillAsync("50061493");
+            await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").ClickAsync();
+            string thirdShopifyItem = await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").InputValueAsync();
+            await page.GetByText("Eveready 60W BC Fireglow BulbEveready 60W BC Fireglow BulbEveready 60W BC Firegl").ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
+            
+            await Task.Delay(3000);
+           
+            await page.GetByRole(AriaRole.Button, new() { Name = "Add shipping or delivery" }).ClickAsync();
+            await page.Locator("label:has-text(\"Custom\") span").Nth(2).ClickAsync();
+            await page.GetByPlaceholder("E.g. Free shipping").ClickAsync();
+            await page.GetByPlaceholder("E.g. Free shipping").FillAsync("Shipping charge");
+            await page.GetByPlaceholder("0.00").ClickAsync();
+            await page.GetByPlaceholder("0.00").FillAsync("250");
+            await page.GetByRole(AriaRole.Button, new() { Name = "Apply" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Collect payment" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Menuitem, new() { Name = "Mark as paid" }).ClickAsync();
+            await Task.Delay(2000);
+            await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
+            await Task.Delay(2000);
+            string orderUrl = page.Url;
+            int lastSlashIndex = orderUrl.LastIndexOf('/') + 1;
+            string salesOrderNo = orderUrl.Substring(lastSlashIndex);
+            salesOrderNo = salesOrderNo.Split('?')[0];
+            Console.WriteLine("Sales Order No. in Shopify: " + salesOrderNo);
+            await Task.Delay(5000);
+
+            var context = await browser.NewContextAsync();
+            // Create a new page in this context
+            var newPage = await context.NewPageAsync();
+            // Now use 'newPage' for your tests like you used 'page'
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+
+            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myPassword = "qu!ckHat70";
+
+            await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Next" }).ClickAsync();
+            await newPage.GetByPlaceholder("Password").ClickAsync();
+            await newPage.Locator("[name='passwd']").FillAsync(myPassword);
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Sign in" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Yes" }).ClickAsync();
+            await newPage.GetByRole(AriaRole.Button, new() { Name = "Search" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Tell me what you want to do" }).FillAsync("Sales Orders");
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Gridcell, new() { Name = "\" / \" Sales Orders Lists Not bookmarked" }).GetByText("Sales Orders").ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Columnheader, new() { Name = "No., sorted in Ascending order Ascending Open menu for No." }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByText("Descending").ClickAsync();
+            await Task.Delay(2000);
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Manage" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Edit" }).ClickAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "General, Show more" }).ClickAsync();
+
+
+            //await newPage.Locator("[id = b4tjee]").FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).ClickAsync();
+            //string firstBusinessCentralItem = await newPage.Locator("[id = b4tjee]").FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).InputValueAsync();
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).ClickAsync();
+            string firstBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).InnerTextAsync();
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50080308" }).ClickAsync();
+            string secondBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50080308" }).InnerTextAsync();
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50061493" }).ClickAsync();
+            string thirdBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50061493" }).InnerTextAsync();
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "Azzure IT - Ecommerce Details\" / \"" }).ClickAsync();
+            string ecommerceOrderRef = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Ecommerce Order Ref" }).InputValueAsync();
+            Console.WriteLine("Sales order no in Business Central: " + ecommerceOrderRef);
+
+
+            //Validation
+            if (ecommerceOrderRef == salesOrderNo)
+            {
+                Console.WriteLine("Sales order on Shopify and BC side are matched each other");
+            }
+            else
+            {
+                Console.WriteLine("Something went wrong.Sales order number on Shopify does not " +
+                                  "match same value in Business central");
+            }
+
+            if (firstShopifyItem == firstBusinessCentralItem && secondShopifyItem == secondBusinessCentralItem && thirdShopifyItem == thirdBusinessCentralItem)
+            {
+                Console.WriteLine("Items SKU numbers are matched and populated in BC fine");
+            }
+            else
+            {
+                Console.WriteLine("Test failed");
+            }
+        }
+
+
 
 
 
