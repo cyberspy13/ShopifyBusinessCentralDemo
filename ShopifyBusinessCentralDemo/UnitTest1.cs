@@ -1,6 +1,7 @@
 ﻿using Microsoft.Playwright;
 using ShopifyBusinessCentralDemo.LoginCredentials;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Metadata;
 using System.Text.RegularExpressions;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -1418,10 +1419,16 @@ namespace ShopifyBusinessCentralDemo
         [Test]
         public async Task Test12()
         {
+
+
+
             using var playwright = await Playwright.CreateAsync();
             // Browser
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>
             //Page
+
+            
+            
             var page = await browser.NewPageAsync();
             //Login into the page
             await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
@@ -1443,7 +1450,7 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
             await Task.Delay(TimeSpan.FromSeconds(2)); // wait for 2 seconds
 
-            await page.Locator("[id='account_tfa_code']").FillAsync("177262");
+            await page.Locator("[id='account_tfa_code']").FillAsync("773364");
 
             await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
             await Task.Delay(TimeSpan.FromSeconds(2));
@@ -1455,7 +1462,7 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByPlaceholder("Searching all products").FillAsync("50153191");
             await page.GetByRole(AriaRole.Link, new() { Name = "ZAN FELIX TABLE+ 6 ELISE CHAIRS GREY" }).ClickAsync();
             await page.GetByLabel("Price").ClickAsync();
-            string firstItemPriceValue = await page.GetByLabel("Price").InputValueAsync(); //1,799.00
+            string firstItemPriceValue = await page.GetByLabel("Price").InputValueAsync();                         //1,799.00
             float firstItemPrice = float.Parse(firstItemPriceValue);
             Console.WriteLine("The first item price in Shopify: " + firstItemPrice);
 
@@ -1466,7 +1473,7 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByPlaceholder("Searching all products").FillAsync("50080308");
             await page.GetByRole(AriaRole.Link, new() { Name = "ADDIS AIRER GATE FOLD 6M" }).ClickAsync();
             await page.GetByLabel("Price").ClickAsync();
-            string secondItemPriceValue = await page.GetByLabel("Price").InputValueAsync(); //10.00
+            string secondItemPriceValue = await page.GetByLabel("Price").InputValueAsync();                        //10.00
             float secondItemPrice = float.Parse(secondItemPriceValue);
             Console.WriteLine("The second item price in Shopify: " + secondItemPrice);
 
@@ -1477,7 +1484,7 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByPlaceholder("Searching all products").FillAsync("50061493");
             await page.GetByRole(AriaRole.Link, new() { Name = "Eveready 60W BC Fireglow Bulb" }).ClickAsync();
             await page.GetByLabel("Price", new() { Exact = true }).ClickAsync();
-            string thirdItemPriceValue = await page.GetByLabel("Price", new() { Exact = true }).InputValueAsync(); //0.99
+            string thirdItemPriceValue = await page.GetByLabel("Price", new() { Exact = true }).InputValueAsync();   //0.99
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Price £" }).ClickAsync();
             float thirdItemPrice = float.Parse(thirdItemPriceValue);
             Console.WriteLine("THe third item price in Shopify: " + thirdItemPrice);
@@ -1587,6 +1594,8 @@ namespace ShopifyBusinessCentralDemo
             Console.WriteLine("Sales Order No. in Shopify: " + salesOrderNo);
             await Task.Delay(5000);
 
+           
+
             //create new page in Business Central
             var context = await browser.NewContextAsync();
             // Create a new page in this context
@@ -1614,51 +1623,68 @@ namespace ShopifyBusinessCentralDemo
             await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Manage" }).ClickAsync();
             await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitem, new() { Name = "Edit" }).ClickAsync();
             await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "General, Show more" }).ClickAsync();
+            //await newPage.FrameLocator("iframe").GetByRole(AriaRole.Menuitemcheckbox, new() { Name = "Toggle FactBox" }).ClickAsync();
             await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Inv. Discount Amount Incl. VAT (GBP)" }).ClickAsync();
-            string invoiceDiscountAmountInBc = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Inv. Discount Amount Incl. VAT (GBP)" }).InputValueAsync(); float realInvoiceDiscountAmountInBc = 0;
-            float realInvoiceDiscountAmountInBc1 = 0;
+            string invoiceDiscountAmountInBc = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Inv. Discount Amount Incl. VAT (GBP)" }).InputValueAsync();
+            float realInvoiceDiscountAmountInBc = 0;
             if (string.IsNullOrWhiteSpace(invoiceDiscountAmountInBc))
             {
                 Console.WriteLine("Handle empty value case");
             }
             else
             {
-                realInvoiceDiscountAmountInBc1 = float.Parse(invoiceDiscountAmountInBc);
+                realInvoiceDiscountAmountInBc = float.Parse(invoiceDiscountAmountInBc);
             }
-            Console.WriteLine("Item discount in Business Central is: " + realInvoiceDiscountAmountInBc1);
+            Console.WriteLine("Item discount in Business Central is: " + realInvoiceDiscountAmountInBc);
+            newPage.WaitForLoadStateAsync();
+            /*
+            //This have to be looked in the future because the way it is working linked to the IFrame which has additional security level
+            var businessCentralTable = await newPage.QuerySelectorAllAsync(".ms-nav-grid-data-table tr td.edit-container:nth-child(4)");
 
-            var firstBcItemAmount = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT " + firstItemPriceValue }).InnerTextAsync();
-            float lineAmountIntValueForTheFirstItem = float.Parse(firstBcItemAmount);
-            Console.WriteLine("The first items Price in Business Central: " + lineAmountIntValueForTheFirstItem);
+            foreach (var businessCentralvalue in businessCentralTable)
+            { 
+                string dataText = await businessCentralvalue.InnerTextAsync();
+                Console.WriteLine(dataText);
+            }
+            */
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).ClickAsync();
+            string firstItemPriceInBc = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).InputValueAsync();
+            float lineAmountIntValueForTheFirstItem = float.Parse(firstItemPriceInBc);
+            Console.WriteLine("Item price in BC: " + lineAmountIntValueForTheFirstItem);
 
-            var secondBcItemAmount = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT " + secondItemPriceValue }).InnerTextAsync();
-            float lineAmountIntValueForTheSecondItem = float.Parse(firstBcItemAmount);
-            Console.WriteLine("The first items Price in Business Central: " + lineAmountIntValueForTheSecondItem);
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT 10.00", Exact = true }).ClickAsync(new LocatorClickOptions { Timeout = 60000});
+            string secondItemPriceInBc = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).InputValueAsync();
+            float lineAmountIntValueForTheSecondtItem = float.Parse(secondItemPriceInBc);
+            Console.WriteLine("Item price in BC: " + lineAmountIntValueForTheSecondtItem);
 
-            var thirdBcItemAmount = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT " + thirdItemPriceValue }).InnerTextAsync();
-            float lineAmountIntValueForTheThirdItem = float.Parse(firstBcItemAmount);
-            Console.WriteLine("The first items Price in Business Central: " + lineAmountIntValueForTheThirdItem);
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT 0.99", Exact = true }).ClickAsync(new LocatorClickOptions { Timeout = 60000 });
+            string thirdItemPriceInBc = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).InputValueAsync();
+            float lineAmountIntValueForTheThirdItem = float.Parse(thirdItemPriceInBc);
+            Console.WriteLine("Item price in BC: " + lineAmountIntValueForTheThirdItem);
+
+            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT 1,000.00", Exact = true }).ClickAsync(new LocatorClickOptions { Timeout = 60000 });
+            string shippingCostInBC = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Line Amount Incl. VAT", Exact = true }).InputValueAsync();
+            float lineAmountOfshippingCostInBC = float.Parse(shippingCostInBC);
+            Console.WriteLine("Shipping cost in BC: " + lineAmountOfshippingCostInBC);
+
 
 
             // here we need to get the values for the second and third item cost in BC
 
 
-            float totalSumOfBcAmountAndShippingCost = realShippingCost + lineAmountIntValueForTheFirstItem + lineAmountIntValueForTheSecondItem + lineAmountIntValueForTheThirdItem;
-            float totalItemPriceInBc = totalSumOfBcAmountAndShippingCost - realDiscountPriceInShopify;
+            float totalSumOfBcAmountAndShippingCost = lineAmountIntValueForTheFirstItem + lineAmountIntValueForTheSecondtItem + lineAmountIntValueForTheThirdItem + lineAmountOfshippingCostInBC;
+            float totalItemPriceInBc = totalSumOfBcAmountAndShippingCost - realInvoiceDiscountAmountInBc;
             Console.WriteLine("Total Sales order value is: " + totalItemPriceInBc);
-
-            //Loop throught the Items in Business Central
-            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).ClickAsync();
-            string firstBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50153191" }).InnerTextAsync();
-            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50080308" }).ClickAsync();
-            string secondBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50080308" }).InnerTextAsync();
-            await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50061493" }).ClickAsync();
-            string thirdBusinessCentralItem = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "No. 50061493" }).InnerTextAsync();
 
             await newPage.FrameLocator("iframe").GetByRole(AriaRole.Button, new() { Name = "Azzure IT - Ecommerce Details\" / \"" }).ClickAsync();
             string ecommerceOrderRef = await newPage.FrameLocator("iframe").GetByRole(AriaRole.Textbox, new() { Name = "Ecommerce Order Ref" }).InputValueAsync();
             Console.WriteLine("Sales order no in Business Central: " + ecommerceOrderRef);
+            await Task.Delay(10000);
+
             //Validation
+
+            
+
             if (ecommerceOrderRef == salesOrderNo)
             {
                 Console.WriteLine("Test passed.");
@@ -1668,7 +1694,7 @@ namespace ShopifyBusinessCentralDemo
                 Console.WriteLine("Test failed.");
             }
 
-            if (firstShopifyItem == firstBusinessCentralItem && secondShopifyItem == secondBusinessCentralItem && thirdShopifyItem == thirdBusinessCentralItem)
+            if (firstItemPrice == lineAmountIntValueForTheFirstItem && secondItemPrice == lineAmountIntValueForTheSecondtItem && thirdItemPrice == lineAmountIntValueForTheThirdItem)
             {
                 Console.WriteLine("Test passed");
             }
@@ -1677,19 +1703,19 @@ namespace ShopifyBusinessCentralDemo
                 Console.WriteLine("Test failed");
             }
 
-            if (firstItemPrice == lineAmountIntValueForTheFirstItem && secondItemPrice == lineAmountIntValueForTheSecondItem && thirdItemPrice == lineAmountIntValueForTheThirdItem)
-            {
-                Console.WriteLine("Test passed");
-            }
-            else
-            {
-                Console.WriteLine("Test failed");
-            }
+
+            
+            
+        
+
+
+
+
+
+
+    
         }
 
-
-     
-        
     }
 }
 
