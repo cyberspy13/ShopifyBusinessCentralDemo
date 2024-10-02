@@ -30,7 +30,7 @@ namespace ShopifyBusinessCentralDemo
             LoginPage loginPage = new LoginPage(page);
             await Task.Delay(2000);
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";// changed in purpose
             string myPassword = "qu!ckHat70";
 
             await loginPage.InputLoginCredentialsUsername(userName: myUsername);
@@ -239,7 +239,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com"; // changed
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -375,7 +375,7 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/");
 
             string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
@@ -433,7 +433,7 @@ namespace ShopifyBusinessCentralDemo
             //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
 
             await page.GetByLabel("Password", new() { Exact = true }).ClickAsync();
-            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@zzC3910!");
+            await page.GetByLabel("Password", new() { Exact = true }).FillAsync(""); // deleted password
             await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
 
@@ -498,7 +498,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari.lecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -621,7 +621,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -755,9 +755,9 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -896,7 +896,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -1016,7 +1016,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -1157,7 +1157,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -1353,7 +1353,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -1603,7 +1603,7 @@ namespace ShopifyBusinessCentralDemo
             // Login into Business central
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
