@@ -25,13 +25,13 @@ namespace ShopifyBusinessCentralDemo
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false }); // Task<IBrowser>
             //Page
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await page.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787");
 
             LoginPage loginPage = new LoginPage(page);
             await Task.Delay(2000);
 
-            string myUsername = "mlecari@azzure.onmicrosoft.com";// changed in purpose
-            string myPassword = "qu!ckHat70";
+            string myUsername = "my_email@gmail.com";// changed in purpose
+            string myPassword = "my_password";
 
             await loginPage.InputLoginCredentialsUsername(userName: myUsername);
             await loginPage.ClickLogin();
@@ -101,7 +101,7 @@ namespace ShopifyBusinessCentralDemo
             //Page
             var page = await browser.NewPageAsync();
 
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/"); //changed
             await page.Locator("[id='account_email']").ClickAsync();
             await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -157,9 +157,9 @@ namespace ShopifyBusinessCentralDemo
             //Page
             var page = await browser.NewPageAsync();
 
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
-            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            await page.Locator("[id='account_email']").FillAsync("info@azzure.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
             await Task.Delay(TimeSpan.FromSeconds(1));
@@ -170,7 +170,7 @@ namespace ShopifyBusinessCentralDemo
             //await page.GetByRole(AriaRole.Button, new() { Name = "Continue with email" }).ClickAsync();
 
             await page.GetByLabel("Password", new() { Exact = true }).ClickAsync();
-            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@zzC3910!");
+            await page.GetByLabel("Password", new() { Exact = true }).FillAsync("@]!");
             await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Use the authentication app" }).ClickAsync();
 
@@ -193,9 +193,9 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByRole(AriaRole.Link, new() { Name = "Customers" }).ClickAsync();
             await page.GetByPlaceholder("Search customers").ClickAsync();
             await page.GetByPlaceholder("Search customers").FillAsync("Ben Evans");
-            await page.WaitForURLAsync("https://admin.shopify.com/store/uattaskersolt/customers?search=Ben%20Evans");
+            await page.WaitForURLAsync("https://admin.shopify.com/store/uattaskersolt/customers?search=Ben%]]]]");
             await page.GetByRole(AriaRole.Link, new() { Name = "Ben Evans" }).ClickAsync();
-            await page.WaitForURLAsync("https://admin.shopify.com/store/uattaskersolt/customers/7613100753060");
+            await page.WaitForURLAsync("https://admin.shopify.com/store/uattaskersolt/customers/");
             await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
             //await page.WaitForURLAsync("https://admin.shopify.com/store/uattaskersolt/draft_orders/new?customerId=7613100753060");
             await page.GetByPlaceholder("Search products").ClickAsync();
@@ -237,10 +237,10 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/");
 
-            string myUsername = "mlecari@azzure.onmicrosoft.com"; // changed
-            string myPassword = "qu!ckHat70";
+            string myUsername = ""; // changed
+            string myPassword = "";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
             await newPage.GetByRole(AriaRole.Button, new() { Name = "Next" }).ClickAsync();
@@ -300,9 +300,9 @@ namespace ShopifyBusinessCentralDemo
             //Page
             var page = await browser.NewPageAsync();
 
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
-            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            await page.Locator("[id='account_email']").FillAsync("info@-.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
             await Task.Delay(2000);
@@ -375,9 +375,9 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-/");
 
-            string myUsername = "mihail.lecari@azzure.onmicrosoft.com";
+            string myUsername = ".lecari@.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -422,7 +422,7 @@ namespace ShopifyBusinessCentralDemo
 
             await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
             await page.Locator("[id='account_email']").ClickAsync();
-            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
             await Task.Delay(2000);
@@ -496,7 +496,7 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-/SANDBOX-");
 
             string myUsername = "mlecari.lecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
@@ -541,7 +541,7 @@ namespace ShopifyBusinessCentralDemo
             //Page
             var page = await browser.NewPageAsync();
 
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
             await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -619,7 +619,7 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-");
 
             string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
@@ -672,7 +672,7 @@ namespace ShopifyBusinessCentralDemo
 
             await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
             await page.Locator("[id='account_email']").ClickAsync();
-            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-.");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
             await Task.Delay(2000);
@@ -716,7 +716,7 @@ namespace ShopifyBusinessCentralDemo
             await shopifyNewCustomer.saveButtonMethod();
             await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
             await page.GetByPlaceholder("Search products").ClickAsync();
-            await page.GetByPlaceholder("Search products").FillAsync("50153191");
+            await page.GetByPlaceholder("Search products").FillAsync("");
             await page.GetByText("ZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELI").ClickAsync();
             await page.GetByRole(AriaRole.Button, new() { Name = "Add", Exact = true }).ClickAsync();
             await Task.Delay(3000);
@@ -755,9 +755,9 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/");
 
-            string myUsername = "mlecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -802,9 +802,9 @@ namespace ShopifyBusinessCentralDemo
                                                                                                                                                                                                                       //Page
             var page = await browser.NewPageAsync();
 
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
-            await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
+            await page.Locator("[id='account_email']").FillAsync("info@azzure-.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("email");
             await Task.Delay(2000);
@@ -896,7 +896,7 @@ namespace ShopifyBusinessCentralDemo
             // Now use 'newPage' for your tests like you used 'page'
             await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
 
-            string myUsername = "mlecari@azzure.onmicrosoft.com";
+            string myUsername = "mlecari@azzure..com";
             string myPassword = "qu!ckHat70";
 
             await newPage.Locator("[name='loginfmt']").FillAsync(myUsername);
@@ -940,7 +940,7 @@ namespace ShopifyBusinessCentralDemo
             // Browser
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>                                                                                                                        //Page
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
             await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -1060,7 +1060,7 @@ namespace ShopifyBusinessCentralDemo
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>
             //Page
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
             await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -1107,7 +1107,7 @@ namespace ShopifyBusinessCentralDemo
             await page.GetByRole(AriaRole.Button, new() { Name = "Create order" }).ClickAsync();
 
             await page.GetByPlaceholder("Search products").ClickAsync();
-            await page.GetByPlaceholder("Search products").FillAsync("50153191");
+            await page.GetByPlaceholder("Search products").FillAsync("");
             await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").ClickAsync();
             string firstShopifyItem = await page.GetByRole(AriaRole.Dialog, new() { Name = "Back to browse All products" }).GetByPlaceholder("Search products").InputValueAsync();
             await page.GetByText("ZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELIX TABLE+ 6 ELISE CHAIRS GREYZAN FELI").ClickAsync();
@@ -1155,7 +1155,7 @@ namespace ShopifyBusinessCentralDemo
             // Create a new page in this context
             var newPage = await context.NewPageAsync();
             // Now use 'newPage' for your tests like you used 'page'
-            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/SANDBOX-AZZTEST");
+            await newPage.GotoAsync(url: "https://businesscentral.dynamics.com/41e8b83d-2266-4629-b144-97c9e432b787/-");
 
             string myUsername = "mlecari@azzure.onmicrosoft.com";
             string myPassword = "qu!ckHat70";
@@ -1222,7 +1222,7 @@ namespace ShopifyBusinessCentralDemo
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false, ExecutablePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe" }); // Task<IBrowser>
             //Page
             var page = await browser.NewPageAsync();
-            await page.GotoAsync(url: "https://admin.shopify.com/store/uattaskersolts");
+            await page.GotoAsync(url: "https://admin.shopify.com/store/");
             await page.Locator("[id='account_email']").ClickAsync();
             await page.Locator("[id='account_email']").FillAsync("info@azzure-creative.com");
             //await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
